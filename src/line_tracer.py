@@ -1,6 +1,10 @@
 import cv2
 
 cap = cv2.VideoCapture(0)               # 0번 카메라 장치 연결 ---①
+
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # width
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480) # height
+
 if cap.isOpened():                      # 캡쳐 객체 연결 확인
     while True:
         ret, img = cap.read()           # 다음 프레임 읽기
