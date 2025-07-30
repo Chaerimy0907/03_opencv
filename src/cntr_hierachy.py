@@ -21,13 +21,13 @@ contour2, hierarchy = cv2.findContours(imthres, cv2.RETR_TREE, \
 print(len(contour2), hierarchy)
 
 # 가장 바깥 컨투어만 그리기 ---⑤
-cv2.drawContours(img, contour, -1, (0,255,0), 3)
+cv2.drawContours(img, contour, 1, (0,255,0), 3)
 # 모든 컨투어 그리기 ---⑥
 for idx, cont in enumerate(contour2): 
     # 랜덤한 컬러 추출 ---⑦
     color = [int(i) for i in np.random.randint(0,255, 3)]
     # 컨투어 인덱스 마다 랜덤한 색상으로 그리기 ---⑧
-    cv2.drawContours(img2, contour2, idx, color, 3)
+    cv2.drawContours(img2, contour2, idx==3 , color, 3)
     # 컨투어 첫 좌표에 인덱스 숫자 표시 ---⑨
     cv2.putText(img2, str(idx), tuple(cont[0][0]), cv2.FONT_HERSHEY_PLAIN, \
                                                             1, (0,0,255))
