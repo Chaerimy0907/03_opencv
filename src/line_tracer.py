@@ -1,27 +1,34 @@
 import cv2
 
+# 웹캠 연결
 cap = cv2.VideoCapture(0)               # 0번 카메라 장치 연결 ---①
 
+# 해상도 설정
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)  # width
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480) # height
+
 
 if cap.isOpened():                      # 캡쳐 객체 연결 확인
     while True:
         ret, img = cap.read()           # 다음 프레임 읽기
         if ret:
+            # q 입력 받으면 종료
             key = cv2.waitKey(1) & 0xFF
-            if key == ord('q'):    # 1ms 동안 키 입력 대기 ---②
-                break                   # 아무 키라도 입력이 있으면 중지
+            if key == ord('q'): 
+                cv2.imwrite('../img/line.jpg', gray_img)   
+                break                   
         else:
             print('no frame')
             break
+        
+        # 색공간 변환
+        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
-        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-
+        # 결과 출력
         cv2.imshow('Original(BGR)', img)
-        cv2.imshow('HSV', hsv)
-        cv2.imshow('Gray', gray)
+        cv2.imshow('HSV', hsv_img)
+        cv2.imshow('Gray', gray_img)
 else:
     print("can't open camera.")
 
