@@ -58,7 +58,10 @@ if cap.isOpened():                      # 캡쳐 객체 연결 확인
 
         # ROI에서 라인만 이진화
         t, t_otsu = cv2.threshold(roi, -1, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-
+        _, t_130 = cv2.threshold(roi, 130, 255, cv2.THRESH_BINARY)
+        adaptive = cv2.adaptiveThreshold(roi, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
+                                         cv2.THRESH_BINARY, 11, 2)
+        
         # ROI 안에서 검은색 라인 컨투어 찾기
         line_mask = cv2.bitwise_not(t_otsu)
         line_contours, _ = cv2.findContours(line_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -84,9 +87,6 @@ if cap.isOpened():                      # 캡쳐 객체 연결 확인
 
         # 이진화 matplotlib 창 갱신
         titles = ['ROI Gray', 'Threshold 130', 'Otsu', 'Adaptive']
-        _, t_130 = cv2.threshold(roi, 130, 255, cv2.THRESH_BINARY)
-        adaptive = cv2.adaptiveThreshold(roi, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
-                                         cv2.THRESH_BINARY, 11, 2)
         images = [roi, t_130, t_otsu, adaptive]
 
         for ax, title, im in zip(ax2, titles, images):
