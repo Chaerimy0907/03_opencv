@@ -35,7 +35,7 @@ if cap.isOpened():                      # 캡쳐 객체 연결 확인
         # 결과 출력
         #cv2.imshow('Original(BGR)', img)
         #cv2.imshow('HSV', hsv_img)
-        cv2.imshow('Gray', gray)
+        #cv2.imshow('Gray', gray)
 
         # 밝은 영역 추출 -> A4 용지
         _, white_mask = cv2.threshold(gray, 200, 255, cv2.THRESH_BINARY)
@@ -53,7 +53,7 @@ if cap.isOpened():                      # 캡쳐 객체 연결 확인
         else:
             roi = gray
 
-        # 오츠 알고리즘
+        # 이진화
         # 경계 값을 130으로 지정
         _, t_130 = cv2.threshold(roi, 130, 255, cv2.THRESH_BINARY)
         # 경계 값을 지정하지 않고 OTSU 알고리즘 선택
@@ -61,9 +61,24 @@ if cap.isOpened():                      # 캡쳐 객체 연결 확인
         # 적응적 이진화
         adaptive = cv2.adaptiveThreshold(roi, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, \
                                          cv2.THRESH_BINARY, 11, 2)
-        print('otsu threshold : ', t)
+        #print('otsu threshold : ', t)
 
-        # matplotlib 창 갱신
+        M = cv2.moments(t_otsu)
+
+        if M["m00"] != 0:
+            cx = int(M["m10"] / M["m00"])
+            cy = int(M["m01"] / M["m00"])
+            print(f"라인 중심 좌표 : ({cx}, {cy})")
+
+        # 중심 좌표 영상에 표시
+            gray_center = cv2.cvtColor(gray, cv2.COLOR_GRAY2BGR)
+            cv2.circle(gray_center, (cx, cy), 5, (0, 0, 255), -1)
+
+            cv2.imshow("Center", gray_center)
+        else:
+            print("라인을 찾지 못함")
+
+        # 이진화 matplotlib 창 갱신
         titles = ['ROI Gray', 'Threshold 130', f'Otsu {int(t)}', 'Adaptive']
         images = [roi, t_130, t_otsu, adaptive]
 
