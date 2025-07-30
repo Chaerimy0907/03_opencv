@@ -9,13 +9,19 @@ if cap.isOpened():                      # 캡쳐 객체 연결 확인
     while True:
         ret, img = cap.read()           # 다음 프레임 읽기
         if ret:
-            cv2.imshow('camera', img)   # 다음 프레임 이미지 표시
             key = cv2.waitKey(1) & 0xFF
             if key == ord('q'):    # 1ms 동안 키 입력 대기 ---②
                 break                   # 아무 키라도 입력이 있으면 중지
         else:
             print('no frame')
             break
+
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+        cv2.imshow('Original(BGR)', img)
+        cv2.imshow('HSV', hsv)
+        cv2.imshow('Gray', gray)
 else:
     print("can't open camera.")
 
